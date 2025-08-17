@@ -24,7 +24,7 @@ function reverseDomain(domain, appName) {
 function main() {
   const args = process.argv.slice(2);
   if (args.length < 2) {
-    console.error("❌ دستور اشتباه!\nمثال: cordova-react-vite Boxit Tracker boxitsoft.ir");
+    console.error("❌ wrong statement example: cordova-react-vite Boxit Tracker boxitsoft.ir");
     process.exit(1);
   }
 
@@ -38,37 +38,64 @@ function main() {
   const rootPath = path.join(process.cwd(), npmName);
   if (!fs.existsSync(rootPath)) fs.mkdirSync(rootPath);
 
-  console.log(`🚀 ایجاد پروژه ${displayName}`);
+  console.log(`🚀 create project ${displayName}`);
   console.log(`📦 npm name: ${npmName}`);
   console.log(`📱 cordova id: ${cordovaId}`);
   console.log(`📱 cordova name: ${cordovaName}`);
 
   // ---- React Vite ----
-  console.log("📦 ایجاد پروژه React (Vite)...");
+  console.log("📦 create project React (Vite)...");
   run(`npm create vite@latest react -- --template react`, rootPath);
   run(`npm install`, path.join(rootPath, "react"));
-
-  // اضافه کردن <script src="cordova.js"> به index.html
+  // install aio-cordova
+  console.log("📦 install aio-cordova in React...");
+  run(`npm install aio-cordova`, path.join(rootPath, "react"));
+  // add <script src="cordova.js"> to index.html
   const indexHtmlPath = path.join(rootPath, "react", "index.html");
   if (fs.existsSync(indexHtmlPath)) {
     let html = fs.readFileSync(indexHtmlPath, "utf8");
     if (!html.includes('cordova.js')) {
       html = html.replace("</body>", "  <script src=\"cordova.js\"></script>\n</body>");
       fs.writeFileSync(indexHtmlPath, html, "utf8");
-      console.log("✔ <script src=\"cordova.js\"> به index.html اضافه شد");
+      console.log("✔ <script src=\"cordova.js\"> added to index.html");
     }
   }
+  // ---- overwrite App.tsx ----
+  const appTsxPath = path.join(rootPath, "react", "src", "App.tsx");
+  const appTsxContent = `import { FC } from "react";
+import { FC } from "react";
+import { AIOCordovaComponent, AIOCordova } from "aio-cordova";
 
+const App: FC = () => {
+  return (
+    <AIOCordovaComponent
+      startWindows={() => <WindowsApp />}
+      startAndroid={(aioCordova) => <AndroidApp cordova={aioCordova} />}
+    />
+  )
+}
+export default App;
+
+const WindowsApp: FC = () => {
+    return null;
+}
+const AndroidApp: FC<{cordova:AIOCordova}> = ({cordova}) => {
+    return null;
+}
+`;
+
+  fs.writeFileSync(appTsxPath, appTsxContent, "utf8");
+  console.log("✔ src/App.tsx changed");
   // ---- Cordova ----
-  console.log("📱 ایجاد پروژه Cordova...");
+  console.log("creating cordova project");
   run(`npx cordova create cordova ${cordovaId} "${cordovaName}"`, rootPath);
 
   // ---- Android platform ----
-  console.log("📱 اضافه کردن Android platform...");
+  console.log("add android platform");
   run(`npx cordova platform add android`, path.join(rootPath, "cordova"));
 
-  // ---- package.json روت ----
-  console.log("🛠 ایجاد package.json روت...");
+  // ---- package.json root ----
+  console.log("create root package.json");
   const rootPkg = {
     name: npmName,
     version: "1.0.0",
@@ -90,14 +117,9 @@ function main() {
     path.join(rootPath, "package.json"),
     JSON.stringify(rootPkg, null, 2)
   );
-
-  console.log("✅ پروژه آماده شد!");
-  console.log(`📂 ساختار پروژه:
-${npmName}/
-  ├─ react/       ← پروژه React Vite
-  ├─ cordova/     ← پروژه Cordova (${cordovaId}, Android platform اضافه شد)
-  └─ package.json ← مدیریت مشترک build
-`);
+  // ---- install root package.json dependencies ----
+  console.log("📦 install root package.json dependencies...");
+  run(`npm install`, rootPath);
+  console.log("✅ project is ready!");
 }
-
 main();

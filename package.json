@@ -1,13 +1,13 @@
 {
   "name": "cordova-react-vite",
-  "version": "1.0.0",
+  "version": "3.0.3",
   "description": "CLI to create a full React + Vite + Cordova project with Android platform",
   "main": "execute.js",
   "bin": {
     "cordova-react-vite": "execute.js"
   },
   "keywords": ["cordova", "react", "vite", "android", "cli"],
-  "author": "Your Name",
+  "author": "mohammad shadrif feiz",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {}
