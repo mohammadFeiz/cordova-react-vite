@@ -1,6 +1,6 @@
 {
   "name": "cordova-react-vite",
-  "version": "3.0.3",
+  "version": "3.0.6",
   "description": "CLI to create a full React + Vite + Cordova project with Android platform",
   "main": "execute.js",
   "bin": {

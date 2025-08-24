@@ -45,11 +45,11 @@ function main() {
 
   // ---- React Vite ----
   console.log("📦 create project React (Vite)...");
-  run(`npm create vite@latest react -- --template react`, rootPath);
+  run(`npm create vite@latest react -- --template react-ts`, rootPath);
   run(`npm install`, path.join(rootPath, "react"));
-  // install aio-cordova
+  // install reactt packages
   console.log("📦 install aio-cordova in React...");
-  run(`npm install aio-cordova`, path.join(rootPath, "react"));
+  run(`npm install aio-cordova aio-utils aio-date aio-apis aio-input aio-popup aio-table`, path.join(rootPath, "react"));
   // add <script src="cordova.js"> to index.html
   const indexHtmlPath = path.join(rootPath, "react", "index.html");
   if (fs.existsSync(indexHtmlPath)) {
@@ -83,9 +83,49 @@ const AndroidApp: FC<{cordova:AIOCordova}> = ({cordova}) => {
     return null;
 }
 `;
+  const appCssPath = path.join(rootPath, "react", "src", "App.css");
+  const appCssContent = `@font-face {
+  font-family: IRANSans-light;
+  font-style: normal;
+  font-weight: 300;
+  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot');
+  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot');
+  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot?#iefix') format('embedded-opentype'),
+    url('./assets/iransans/woff2/IRANSansWeb(FaNum)_Light.woff2') format('woff2'),
+    url('./assets/iransans/woff/IRANSansWeb(FaNum)_Light.woff') format('woff'),
+    url('./assets/iransans/ttf/IRANSansWeb(FaNum)_Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: IRANSans-ultra-light;
+  font-style: normal;
+  font-weight: 200;
+  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_UltraLight.eot');
+  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_UltraLight.eot?#iefix') format('embedded-opentype'),
+    url('./assets/iransans/woff2/IRANSansWeb(FaNum)_UltraLight.woff2') format('woff2'),
+    url('./assets/iransans/woff/IRANSansWeb(FaNum)_UltraLight.woff') format('woff'),
+    url('./assets/iransans/ttf/IRANSansWeb(FaNum)_UltraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: IRANSans-Medium;
+  font-style: normal;
+  font-weight: 200;
+  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Medium.eot');
+  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Medium.eot?#iefix') format('embedded-opentype'),
+    url('./assets/iransans/woff2/IRANSansWeb(FaNum)_Medium.woff2') format('woff2'),
+    url('./assets/iransans/woff/IRANSansWeb(FaNum)_Medium.woff') format('woff'),
+    url('./assets/iransans/ttf/IRANSansWeb(FaNum)_Medium.ttf') format('truetype');
+}
+body{
+  font-family:IRANSans-light;
+}`
 
   fs.writeFileSync(appTsxPath, appTsxContent, "utf8");
   console.log("✔ src/App.tsx changed");
+  fs.writeFileSync(appCssPath, appCssContent, "utf8");
+  console.log("✔ src/App.css changed");
+
   // ---- Cordova ----
   console.log("creating cordova project");
   run(`npx cordova create cordova ${cordovaId} "${cordovaName}"`, rootPath);
@@ -94,6 +134,10 @@ const AndroidApp: FC<{cordova:AIOCordova}> = ({cordova}) => {
   console.log("add android platform");
   run(`npx cordova platform add android`, path.join(rootPath, "cordova"));
 
+  // ---- Cordova Plugins ----
+  console.log("add cordova plugins...");
+  run(`npx cordova plugin add cordova-sqlite-storage`, path.join(rootPath, "cordova"));
+  
   // ---- package.json root ----
   console.log("create root package.json");
   const rootPkg = {
