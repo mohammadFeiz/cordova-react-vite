@@ -47,9 +47,9 @@ function main() {
   console.log("📦 create project React (Vite)...");
   run(`npm create vite@latest react -- --template react-ts`, rootPath);
   run(`npm install`, path.join(rootPath, "react"));
-  // install reactt packages
+  // install react packages
   console.log("📦 install aio-cordova in React...");
-  run(`npm install aio-cordova aio-utils aio-date aio-apis aio-input aio-popup aio-table`, path.join(rootPath, "react"));
+  run(`npm install aio-cordova aio-utils aio-date aio-apis aio-input aio-popup aio-table tailwindcss @tailwindcss/vite`, path.join(rootPath, "react"));
   // add <script src="cordova.js"> to index.html
   const indexHtmlPath = path.join(rootPath, "react", "index.html");
   if (fs.existsSync(indexHtmlPath)) {
@@ -84,7 +84,10 @@ const AndroidApp: FC<{cordova:AIOCordova}> = ({cordova}) => {
 }
 `;
   const appCssPath = path.join(rootPath, "react", "src", "App.css");
-  const appCssContent = `@font-face {
+  const appCssContent = `
+  @import "tailwindcss";
+
+  @font-face {
   font-family: IRANSans-light;
   font-style: normal;
   font-weight: 300;
@@ -120,11 +123,21 @@ const AndroidApp: FC<{cordova:AIOCordova}> = ({cordova}) => {
 body{
   font-family:IRANSans-light;
 }`
+  const viteConfigPath = path.join(rootPath, "react", "src", "vite.config.ts");
+  const viteConfigContent = `
+  import { defineConfig } from 'vite'
+  import react from '@vitejs/plugin-react'
+  import tailwindcss from '@tailwindcss/vite'
+  export default defineConfig({
+    plugins: [react(),tailwindcss()]
+  })`
 
   fs.writeFileSync(appTsxPath, appTsxContent, "utf8");
   console.log("✔ src/App.tsx changed");
   fs.writeFileSync(appCssPath, appCssContent, "utf8");
   console.log("✔ src/App.css changed");
+  fs.writeFileSync(viteConfigPath, viteConfigContent, "utf8");
+  console.log("✔ src/vite.config.ts changed");
 
   // ---- Cordova ----
   console.log("creating cordova project");
@@ -137,7 +150,7 @@ body{
   // ---- Cordova Plugins ----
   console.log("add cordova plugins...");
   run(`npx cordova plugin add cordova-sqlite-storage`, path.join(rootPath, "cordova"));
-  
+
   // ---- package.json root ----
   console.log("create root package.json");
   const rootPkg = {
