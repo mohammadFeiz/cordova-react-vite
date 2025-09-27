@@ -163,6 +163,7 @@ body{
       "cordova:build": "cd cordova && cordova build android",
       "move:apk": "xcopy cordova\\platforms\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk . /Y",
       "build": "npm run react:build && npm run sync:build && npm run cordova:build && npm run move:apk",
+      "build:apk": "npm run cordova:build && npm run move:apk",
       "start": "cd react && npm run dev"
     },
     devDependencies: {
