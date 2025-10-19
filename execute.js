@@ -63,85 +63,88 @@ function main() {
   // ---- overwrite App.tsx ----
   const appTsxPath = path.join(rootPath, "react", "src", "App.tsx");
   const appTsxContent = `import { FC } from "react";
-import { FC } from "react";
+import { type FC } from "react";
 import { AIOCordovaComponent, AIOCordova } from "aio-cordova";
 
 const App: FC = () => {
   return (
     <AIOCordovaComponent
-      startWindows={() => <WindowsApp />}
-      startAndroid={(aioCordova) => <AndroidApp cordova={aioCordova} />}
+      appId='${npmName}'
+      start={(p) => <Start cordova={p.cordova} />}
     />
   )
 }
 export default App;
 
-const WindowsApp: FC = () => {
-    return null;
-}
-const AndroidApp: FC<{cordova:AIOCordova}> = ({cordova}) => {
-    return null;
+const Start: FC<{ cordova?: AIOCordova }> = ({ cordova }) => {
+  return null;
 }
 `;
-  const appCssPath = path.join(rootPath, "react", "src", "App.css");
+  const indexCssPath = path.join(rootPath, "react", "src", "index.css");
+  const indexCssContent = `
+  @import "tailwindcss";
+  `
+const appCssPath = path.join(rootPath, "react", "src", "App.css");
   const appCssContent = `
   @import "tailwindcss";
 
   @font-face {
-  font-family: IRANSans-light;
-  font-style: normal;
-  font-weight: 300;
-  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot');
-  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot');
-  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot?#iefix') format('embedded-opentype'),
-    url('./assets/iransans/woff2/IRANSansWeb(FaNum)_Light.woff2') format('woff2'),
-    url('./assets/iransans/woff/IRANSansWeb(FaNum)_Light.woff') format('woff'),
-    url('./assets/iransans/ttf/IRANSansWeb(FaNum)_Light.ttf') format('truetype');
-}
+    font-family: IRANSans - light;
+    font-style: normal;
+    font-weight: 300;
+    src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot');
+    src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot');
+    src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot?#iefix') format('embedded-opentype'),
+      url('./assets/iransans/woff2/IRANSansWeb(FaNum)_Light.woff2') format('woff2'),
+        url('./assets/iransans/woff/IRANSansWeb(FaNum)_Light.woff') format('woff'),
+          url('./assets/iransans/ttf/IRANSansWeb(FaNum)_Light.ttf') format('truetype');
+  }
 
-@font-face {
-  font-family: IRANSans-ultra-light;
-  font-style: normal;
-  font-weight: 200;
-  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_UltraLight.eot');
-  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_UltraLight.eot?#iefix') format('embedded-opentype'),
-    url('./assets/iransans/woff2/IRANSansWeb(FaNum)_UltraLight.woff2') format('woff2'),
-    url('./assets/iransans/woff/IRANSansWeb(FaNum)_UltraLight.woff') format('woff'),
-    url('./assets/iransans/ttf/IRANSansWeb(FaNum)_UltraLight.ttf') format('truetype');
-}
+  @font-face {
+    font-family: IRANSans-ultra-light;
+    font-style: normal;
+    font-weight: 200;
+    src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_UltraLight.eot');
+    src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_UltraLight.eot?#iefix') format('embedded-opentype'),
+      url('./assets/iransans/woff2/IRANSansWeb(FaNum)_UltraLight.woff2') format('woff2'),
+        url('./assets/iransans/woff/IRANSansWeb(FaNum)_UltraLight.woff') format('woff'),
+          url('./assets/iransans/ttf/IRANSansWeb(FaNum)_UltraLight.ttf') format('truetype');
+  }
 
-@font-face {
-  font-family: IRANSans-Medium;
-  font-style: normal;
-  font-weight: 200;
-  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Medium.eot');
-  src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Medium.eot?#iefix') format('embedded-opentype'),
-    url('./assets/iransans/woff2/IRANSansWeb(FaNum)_Medium.woff2') format('woff2'),
-    url('./assets/iransans/woff/IRANSansWeb(FaNum)_Medium.woff') format('woff'),
-    url('./assets/iransans/ttf/IRANSansWeb(FaNum)_Medium.ttf') format('truetype');
-}
+  @font-face {
+    font-family: IRANSans-Medium;
+    font-style: normal;
+    font-weight: 200;
+    src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Medium.eot');
+    src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Medium.eot?#iefix') format('embedded-opentype'),
+      url('./assets/iransans/woff2/IRANSansWeb(FaNum)_Medium.woff2') format('woff2'),
+        url('./assets/iransans/woff/IRANSansWeb(FaNum)_Medium.woff') format('woff'),
+          url('./assets/iransans/ttf/IRANSansWeb(FaNum)_Medium.ttf') format('truetype');
+  }
 body{
-  font-family:IRANSans-light;
-}`
+    font-family: IRANSans-light;
+  } `
   const viteConfigPath = path.join(rootPath, "react", "src", "vite.config.ts");
   const viteConfigContent = `
   import { defineConfig } from 'vite'
   import react from '@vitejs/plugin-react'
   import tailwindcss from '@tailwindcss/vite'
   export default defineConfig({
-    plugins: [react(),tailwindcss()]
+    plugins: [react(), tailwindcss()]
   })`
 
   fs.writeFileSync(appTsxPath, appTsxContent, "utf8");
   console.log("✔ src/App.tsx changed");
   fs.writeFileSync(appCssPath, appCssContent, "utf8");
   console.log("✔ src/App.css changed");
+  fs.writeFileSync(indexCssPath, indexCssContent, "utf8");
+  console.log("✔ src/index.css changed");
   fs.writeFileSync(viteConfigPath, viteConfigContent, "utf8");
   console.log("✔ src/vite.config.ts changed");
 
   // ---- Cordova ----
   console.log("creating cordova project");
-  run(`npx cordova create cordova ${cordovaId} "${cordovaName}"`, rootPath);
+  run(`npx cordova create cordova ${ cordovaId } "${cordovaName}"`, rootPath);
 
   // ---- Android platform ----
   console.log("add android platform");
@@ -150,13 +153,16 @@ body{
   // ---- Cordova Plugins ----
   console.log("add cordova plugins...");
   run(`npx cordova plugin add cordova-sqlite-storage`, path.join(rootPath, "cordova"));
-
+  run(`npx cordova plugin add cordova-plugin-android-permissions`, path.join(rootPath, "cordova"));
+  run(`npx cordova plugin add cordova-plugin-file`, path.join(rootPath, "cordova"));
+  run(`npx cordova plugin add cordova-plugin-file-opener2`, path.join(rootPath, "cordova"));
+  run(`npx cordova plugin add cordova-plugin-email-composer`, path.join(rootPath, "cordova"));
   // ---- package.json root ----
   console.log("create root package.json");
   const rootPkg = {
     name: npmName,
     version: "1.0.0",
-    description: `${cordovaName} - React + Cordova project`,
+    description: `${ cordovaName } - React + Cordova project`,
     scripts: {
       "react:build": "cd react && npm run build",
       "sync:build": "rimraf cordova\\www && xcopy react\\dist cordova\\www /E /H /C /I",
