@@ -49,7 +49,7 @@ function main() {
   run(`npm install`, path.join(rootPath, "react"));
   // install react packages
   console.log("📦 install aio-cordova in React...");
-  run(`npm install aio-cordova aio-utils aio-date aio-apis aio-input aio-popup aio-table tailwindcss @tailwindcss/vite`, path.join(rootPath, "react"));
+  run(`npm install aio-cordova aio-utils aio-date aio-apis aio-input aio-popup aio-table tailwindcss @tailwindcss/vite @mdi/react @mdi/js`, path.join(rootPath, "react"));
   // add <script src="cordova.js"> to index.html
   const indexHtmlPath = path.join(rootPath, "react", "index.html");
   if (fs.existsSync(indexHtmlPath)) {
@@ -62,7 +62,7 @@ function main() {
   }
   // ---- overwrite App.tsx ----
   const appTsxPath = path.join(rootPath, "react", "src", "App.tsx");
-  const appTsxContent = `import { FC } from "react";
+  const appTsxContent = `
 import { type FC } from "react";
 import { AIOCordovaComponent, AIOCordova } from "aio-cordova";
 
@@ -89,7 +89,7 @@ const appCssPath = path.join(rootPath, "react", "src", "App.css");
   @import "tailwindcss";
 
   @font-face {
-    font-family: IRANSans - light;
+    font-family: IRANSans-light;
     font-style: normal;
     font-weight: 300;
     src: url('./assets/iransans/eot/IRANSansWeb(FaNum)_Light.eot');
